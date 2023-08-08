@@ -81,7 +81,7 @@ class Service:
             except RatelimitException:
                 pass
             except (Non200Exception, NotFoundException) as err:
-                self.logging.exception("Fetch error")
+                self.logging.exception("Fetch error : %s", url)
             except Exception as err:
                 await asyncio.sleep(1)
                 self.logging.exception("General Exception in Fetch")

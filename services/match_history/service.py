@@ -128,9 +128,10 @@ class Platform:
             data = await self.endpoint.request(url, session)
             self.result_matchids += data
             if start == 0:
-                platform, id = data[0].split("_")
-                id = int(id)
-                self.result_summoners.append([platform, id, target])
+                if len(data) > 0:
+                    platform, id = data[0].split("_")
+                    id = int(id)
+                    self.result_summoners.append([platform, id, target])
             self.logging.debug(url)
         except LimitBlocked as err:
             self.retry_after = datetime.now() + timedelta(seconds=err.retry_after)
@@ -139,7 +140,7 @@ class Platform:
             self.logging.error("Ratelimit")
             return start
         except Non200Exception as err:
-            self.logging.exception("Non 200 Exception")
+            self.logging.exception("Non 200 Exception : %s" % url)
             return start
         except NotFoundException:
             self.logging.error("Not found error.")
